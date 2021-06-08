@@ -108,6 +108,10 @@ curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-
 ```bash
 curl $(oc get route/frontend -n control-plane -o jsonpath='{.spec.host}')
 ```
+- Loading test gateway -c concurrent -t in second 
+```bash
+siege -c3 -t50s  curl $(oc get route/frontend -n control-plane -o jsonpath='{.spec.host}')
+```
 ### Canary Deployment
 Deploy frontend v2 and configure canary deployment to route only request from Firefox to v2
 - Deploy frontend-v2
