@@ -112,7 +112,7 @@ curl $(oc get route/frontend -n control-plane -o jsonpath='{.spec.host}')
 Deploy frontend v2 and configure canary deployment to route only request from Firefox to v2
 - Deploy frontend-v2
 ```bash
-oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/rontend-v2-deployment.yaml -n data-plane
+oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/frontend-v2-deployment.yaml -n data-plane
 ```
 - Create [destination rule](frontend-destination-rule.yaml) with subgroup based on version
   ```yaml
