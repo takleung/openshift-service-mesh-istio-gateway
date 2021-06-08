@@ -13,7 +13,7 @@
   ```
 - Deploy frontend and backend app
   ```bash
-  oc create -f app.yaml -n data-plane
+  oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/app.yaml -n data-plane
   watch -d oc get pods -n data-plane
   ```
 - Test with cURL
