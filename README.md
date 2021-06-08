@@ -32,7 +32,7 @@
     ```
   - Create control plane
     ```bash
-    oc create -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/smcp.yaml -n control-plane
+    oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/smcp.yaml -n control-plane
     ```
   - Wait couple of minutes for creating control plane
     ```bash
@@ -40,7 +40,7 @@
     ```
   - Join data-plane namespace into control-plane
     ```bash
-    oc create -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/member-roll.yaml -n control-plane
+    oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/member-roll.yaml -n control-plane
     ```
   - Check Service Mesh Member Roll status
     ```bash
@@ -90,19 +90,19 @@
 - Create gateway in control-plane
 ```bash
 SUBDOMAIN=$(oc whoami --show-console  | awk -F'apps.' '{print $2}')
-curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/wildcard-gateway.yaml  | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc create -n control-plane -f -
+curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/wildcard-gateway.yaml  | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc create -n control-plane -f -
 ```
-<!-- oc create -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/wildcard-gateway.yaml -n control-plane -->
+<!-- oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/wildcard-gateway.yaml -n control-plane -->
 
 - Create route in control-plane
 ```bash
 SUBDOMAIN=$(oc whoami --show-console  | awk -F'apps.' '{print $2}')
-curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/frontend-route-istio.yaml | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc create -n control-plane -f -
+curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/frontend-route-istio.yaml | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc create -n control-plane -f -
 ```
 - Crate virtual service in data-plane
 ```bash
 SUBDOMAIN=$(oc whoami --show-console  | awk -F'apps.' '{print $2}')
-curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/frontend-virtual-service.yaml | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc create -n data-plane -f -
+curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/frontend-virtual-service.yaml | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc create -n data-plane -f -
 ```
 - Test gateway
 ```bash
@@ -112,7 +112,7 @@ curl $(oc get route/frontend -n control-plane -o jsonpath='{.spec.host}')
 Deploy frontend v2 and configure canary deployment to route only request from Firefox to v2
 - Deploy frontend-v2
 ```bash
-oc create -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/frontend-v2-deployment.yaml -n data-plane
+oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/rontend-v2-deployment.yaml -n data-plane
 ```
 - Create [destination rule](frontend-destination-rule.yaml) with subgroup based on version
   ```yaml
@@ -134,7 +134,7 @@ oc create -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-is
   ```
   Create destination rule
   ```bash
-  oc apply -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/frontend-destination-rule.yaml -n data-plane
+  oc apply -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/frontend-destination-rule.yaml -n data-plane
   ```
 - Update [frontend virtual service](frontend-virtual-service-canary.yaml) with to routing by header
   ```yaml
@@ -159,7 +159,7 @@ oc create -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-is
   Create virtual service
   ```bash
   SUBDOMAIN=$(oc whoami --show-console  | awk -F'apps.' '{print $2}')
-  curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/frontend-virtual-service-canary.yaml |sed 's/SUBDOMAIN/'$SUBDOMAIN'/'|oc apply -n data-plane -f -
+  curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/frontend-virtual-service-canary.yaml |sed 's/SUBDOMAIN/'$SUBDOMAIN'/'|oc apply -n data-plane -f -
   ```
 - Test
   - Set User-Agent to Firefox
@@ -183,7 +183,7 @@ oc create -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-is
 ## Service Mesh v2
 - Create cretificate and secret key using [create-certificate.sh](create-certificate.sh)
   ```bash
-  curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/create-certificate.sh | bash /dev/stdin
+  curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/create-certificate.sh | bash /dev/stdin
   ```
 - Create secrets
   ```bash
@@ -195,12 +195,12 @@ oc create -f https://raw.githubusercontent.com/voraviz/openshift-service-mesh-is
 - Update [gateway](wildcard-gateway-tls.yaml) with simple mode TLS
   ```bash
   SUBDOMAIN=$(oc whoami --show-console  | awk -F'apps.' '{print $2}')
-  curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/wildcard-gateway-tls.yaml|sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc apply -n control-plane -f -
+  curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/wildcard-gateway-tls.yaml|sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc apply -n control-plane -f -
   ```
 - Update [frontend router](frontend-route-istio-passthrough.yaml) to passthrough mode
   ```bash
   SUBDOMAIN=$(oc whoami --show-console  | awk -F'apps.' '{print $2}')
-  curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/frontend-route-istio-passthrough.yaml |sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc apply -n control-plane -f -
+  curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/frontend-route-istio-passthrough.yaml |sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc apply -n control-plane -f -
   ```
 - Test
   ```bash
@@ -221,12 +221,12 @@ oc patch deployment istio-ingressgateway  \
 - Update [gateway](wildcard-gateway-tls.yaml) with simple mode TLS
   ```bash
   SUBDOMAIN=$(oc whoami --show-console  | awk -F'apps.' '{print $2}')
-  curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/wildcard-gateway-tls-v1.yaml | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc apply -n control-plane -f -
+  curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/wildcard-gateway-tls-v1.yaml | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc apply -n control-plane -f -
   ```
 - Update [frontend router](frontend-route-istio-passthrough.yaml) to passthrough mode
   ```bash
   SUBDOMAIN=$(oc whoami --show-console  | awk -F'apps.' '{print $2}')
-  curl -s https://raw.githubusercontent.com/voraviz/openshift-service-mesh-istio-gateway/main/frontend-route-istio-passthrough.yaml | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc apply -n control-plane -f -
+  curl -s https://raw.githubusercontent.com/takleung/openshift-service-mesh-istio-gateway/main/frontend-route-istio-passthrough.yaml | sed 's/SUBDOMAIN/'$SUBDOMAIN'/' | oc apply -n control-plane -f -
   ```
 - Test
   ```bash
