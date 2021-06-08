@@ -183,6 +183,24 @@ oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-i
     ```
     Frontend version: v1 => [Backend: http://backend:8080, Response: 200, Body: Backend version:v1, Response:200, Host:backend-v1-5c45fb5d76-gg8sc, Status:200, Message: Hello, Quarkus]
     ```
+- Loading Test
+  - Set User-Agent to Firefox
+    ```bash
+    #Test with header User-Agent contains "Firefox"
+    siege -c3 -t50s curl -H "User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0) Gecko/20100101 Firefox/78.0" $(oc get route frontend -n control-plane -o jsonpath='{.spec.host}')
+    ```
+    Output
+    ```
+    Frontend version: v2 => [Backend: http://backend:8080, Response: 200, Body: Backend version:v1, Response:200, Host:backend-v1-5c45fb5d76-gg8sc, Status:200, Message: Hello, Quarkus]
+    ```
+  - Set User-Agent to Chrome
+    ```bash
+    siege -c3 -t50s curl -H "User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 Edg/79.0.309.71" $(oc get route frontend -n control-plane -o jsonpath='{.spec.host}')
+    ```
+    Output
+    ```
+    Frontend version: v1 => [Backend: http://backend:8080, Response: 200, Body: Backend version:v1, Response:200, Host:backend-v1-5c45fb5d76-gg8sc, Status:200, Message: Hello, Quarkus]
+    ```
 # Secure with TLS
 ## Service Mesh v2
 - Create cretificate and secret key using [create-certificate.sh](create-certificate.sh)
