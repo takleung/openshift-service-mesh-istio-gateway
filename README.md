@@ -201,6 +201,15 @@ oc create -f https://raw.githubusercontent.com/takleung/openshift-service-mesh-i
     ```
     Frontend version: v1 => [Backend: http://backend:8080, Response: 200, Body: Backend version:v1, Response:200, Host:backend-v1-5c45fb5d76-gg8sc, Status:200, Message: Hello, Quarkus]
     ```
+  - Set User-Agent to Email
+    ```bash
+    watch -n1 curl -v -H "Cache-Control: no-cache" --cookie "email=tyip@hklab-redhat.com" $(oc get route frontend -n control-plane -o jsonpath='{.spec.host}')
+    ```
+    Output
+    ```
+    Frontend version: v1 => ........
+    ```
+
 # Secure with TLS
 ## Service Mesh v2
 - Create cretificate and secret key using [create-certificate.sh](create-certificate.sh)
